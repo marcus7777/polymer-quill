@@ -3,7 +3,7 @@
   "version": "1.2.0.12",
   "description": "Polymer Quill Rich Text Editor",
   "authors": [
-    "Chuck Horton"
+    "Chuck Horton", "Marcus Hitchins"
   ],
   "keywords": [
     "web-components",
