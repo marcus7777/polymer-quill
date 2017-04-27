@@ -103,13 +103,13 @@ Custom property | Description | Default
       }
 
     </style>
-    <div id="toolbar" hidden$='{{hideToolbar}}'>
+    <div id="toolbar" hidden$='[[hideToolbar]]'>
       <!-- <span class="ql-formats">
       <select class="ql-font"></select>
       <select class="ql-size"></select>
       </span> -->
       <span class="ql-formats">
-        <select class="ql-header"  hidden$="{{standardToolbar}}">
+        <select class="ql-header"  hidden$="[[standardToolbar]]">
           <option value="1">Header 1</option>
           <option value="2">Header 2</option>
           <option value="3">Header 3</option>
@@ -117,7 +117,7 @@ Custom property | Description | Default
           <option value="5">Header 5</option>
           <option value="7">Normal</option>
         </select>
-        <select class="ql-header"  hidden$="{{!standardToolbar}}">
+        <select class="ql-header"  hidden$="[[!standardToolbar]]">
           <option value="1">Header 1</option>
           <option value="2">Header 2</option>
           <option value="3">Header 3</option>
@@ -128,9 +128,9 @@ Custom property | Description | Default
         <button class="ql-bold" title="Bold"></button>
         <button class="ql-italic" title="Italic"></button>
         <button class="ql-underline" title="Underline"></button>
-        <button class="ql-strike" title="strike" hidden$="{{standardToolbar}}"></button>
+        <button class="ql-strike" title="strike" hidden$="[[standardToolbar]]"></button>
       </span>
-      <span class="ql-formats" hidden$="{{standardToolbar}}">
+      <span class="ql-formats" hidden$="[[standardToolbar]]">
         <select class="ql-color" title="Text Color"></select>
         <select class="ql-background" title="Text Background Color"></select>
       </span>
@@ -138,7 +138,7 @@ Custom property | Description | Default
       <button class="ql-script" value="sub"></button>
       <button class="ql-script" value="super"></button>
       </span> -->
-      <span class="ql-formats" hidden$="{{standardToolbar}}">
+      <span class="ql-formats" hidden$="[[standardToolbar]]">
         <button class="ql-header" value="1" title="Header 1"></button>
         <button class="ql-header" value="2" title="Header 2"></button>
         <button class="ql-blockquote" title="Blockquote"></button>
@@ -147,27 +147,27 @@ Custom property | Description | Default
       <span class="ql-formats">
         <button class="ql-list" value="ordered" title="Numbered List"></button>
         <button class="ql-list" value="bullet" title="Bullet List"></button>
-        <button class="ql-indent" value="-1" title="Decrease Indent" hidden$="{{standardToolbar}}"></button>
-        <button class="ql-indent" value="+1" title="Indent" hidden$="{{standardToolbar}}"></button>
+        <button class="ql-indent" value="-1" title="Decrease Indent" hidden$="[[standardToolbar]]"></button>
+        <button class="ql-indent" value="+1" title="Indent" hidden$="[[standardToolbar]]"></button>
       </span>
-      <span class="ql-formats" hidden$="{{standardToolbar}}">
+      <span class="ql-formats" hidden$="[[standardToolbar]]">
         <!-- <button class="ql-direction" value="rtl"></button> -->
         <select class="ql-align" title="Align">></select>
       </span>
       <span class="ql-formats">
         <button class="ql-link" title="Link"></button>
-        <button class="ql-image" title="Image" hidden$="{{standardToolbar}}"></button>
-        <button class="ql-video" title="Video" hidden$="{{standardToolbar}}"></button>
+        <button class="ql-image" title="Image"></button>
+        <button class="ql-video" title="Video" hidden$="[[standardToolbar]]"></button>
         <!-- <button class="ql-formula"></button>> -->
       </span>
       <span class="ql-formats">
         <button class="ql-clean" title="Clear Formating"></button>
       </span>
     </div>
-    <div id="editor" class$="{{disabledClass}}">{{content}}</div>
+    <div id="editor" class$="[[disabledClass]]">{{content}}</div>
     <div id="results" class="results" hidden$="[[!showResults]]">RESULTS: {{content}}</div>
     <div id="resultsHTML" class="results" hidden$="[[!showHtml]]">HTML: {{html}}</div>
-
+    <iron-media-query query="(min-width: 600px)" query-matches="{{_wide}}"></iron-media-query>
   </template>
 
   <script>
@@ -256,19 +256,18 @@ Custom property | Description | Default
         },
         /**
          * Editor toolbar type.
-         * Options are `standard`, `full`.
+         * Options are `standard`, `full`, 'auto'.
          */
         toolbarType: {
           type: String,
           value: 'standard',
         },
+        
         /**
          * Standard Tool
-         * Default is `true`.
          */
         standardToolbar: {
-          type: Boolean,
-          value: true,
+          computed: "isStandardToolbar(toolbarType,_wide)"
         },
         /**
          * Enable tracks if editing is enabled.
@@ -311,11 +310,14 @@ Custom property | Description | Default
           value: 'Compose an epic...',
         }
       },
-
-      ready: function() {
+      isStandardToolbar: function(toolbarType, wide){
         if (this.toolbarType === 'full') {
           this.standardToolbar = false;
+        } else if (this.toolbarType === 'auto') {
+          this.standardToolbar = !wide
         }
+      },
+      ready: function() {
         var Delta = Quill.import('delta');
         this.quill = new Quill(this.$.editor, {
           modules: {
