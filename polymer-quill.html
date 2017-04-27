@@ -1,4 +1,3 @@
-
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="polymer-quill-import.html">
 <link rel="import" href="polymer-quill-styles-snow.html">
@@ -145,7 +144,7 @@ Custom property | Description | Default
         <button class="ql-code-block" title="Code Clock"></button>
       </span>
       <span class="ql-formats">
-        <button class="ql-list" value="ordered" title="Numbered List"></button>
+        <button class="ql-list" value="ordered" title="Numbered List" hidden$="[[standardToolbar]]"></button>
         <button class="ql-list" value="bullet" title="Bullet List"></button>
         <button class="ql-indent" value="-1" title="Decrease Indent" hidden$="[[standardToolbar]]"></button>
         <button class="ql-indent" value="+1" title="Indent" hidden$="[[standardToolbar]]"></button>
